@@ -19,11 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\KeyboardClass.hpp" />
+    <ClInclude Include="src\KeyboardInputEvent.hpp" />
     <ClInclude Include="src\SableEngine.hpp" />
     <ClInclude Include="src\Logger.hpp" />
     <ClInclude Include="src\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\KeyboardClass.cpp" />
+    <ClCompile Include="src\KeyboardInputEvent.cpp" />
     <ClCompile Include="src\SableEngine.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Window.cpp" />
@@ -130,7 +134,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Dev\SableEngine_v2\dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\SableEngine_v2\dependencies\include;C:\Dev\SableEngine_v2\SableEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -156,7 +160,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Dev\SableEngine_v2\dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\SableEngine_v2\dependencies\include;C:\Dev\SableEngine_v2\SableEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

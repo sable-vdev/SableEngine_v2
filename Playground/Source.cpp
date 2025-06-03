@@ -13,7 +13,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	{
 		try
 		{
-			engine->Run();
+			while (engine->Run())
+			{
+				engine->Update();
+			}
 		}
 		catch (const std::exception& ex)
 		{

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\EngineContainer.hpp" />
     <ClInclude Include="src\KeyboardClass.hpp" />
     <ClInclude Include="src\KeyboardInputEvent.hpp" />
     <ClInclude Include="src\SableEngine.hpp" />
@@ -26,6 +27,7 @@
     <ClInclude Include="src\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EngineContainer.cpp" />
     <ClCompile Include="src\KeyboardClass.cpp" />
     <ClCompile Include="src\KeyboardInputEvent.cpp" />
     <ClCompile Include="src\SableEngine.cpp" />

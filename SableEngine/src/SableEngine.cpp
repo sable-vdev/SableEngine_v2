@@ -6,33 +6,36 @@ bool SableEngine::Initialize(LPCWSTR title, int width, int height, bool fullscre
 	CreateConsole();
 #endif // NDEBUG
 
-	m_window = std::make_unique<Window>();
-
-	if (!m_window->Initialize(title, width, height, fullscreen))
+	if (!m_window.Initialize(this, title, width, height, fullscreen))
 	{
 		Logger::Log(ERROR, "Failed to initialize the window class.");
 		return false;
 	}
 
-	m_keyboard = std::make_unique<KeyboardClass>();
-
 	return true;
 }
 
-void SableEngine::Run()
+bool SableEngine::Run()
 {
-	while (m_window->Run())
-	{
+	return m_window.Run();
+}
 
+void SableEngine::Update()
+{
+	if (!m_keyboard.IsCharBufferEmpty())
+	{
+		unsigned char c = m_keyboard.ReadChar();
+		if (c == 'a')
+		{
+			Logger::Log(DEBUG, c);
+		}
+		
 	}
 }
 
 void SableEngine::Shutdown()
 {
-	if (m_window)
-	{
-		m_window->Shutdown();
-	}
+	m_window.Shutdown();
 }
 
 void SableEngine::CreateConsole()

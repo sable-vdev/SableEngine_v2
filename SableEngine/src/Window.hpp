@@ -4,13 +4,14 @@
 #include <string>
 #include "Logger.hpp"
 
+class EngineContainer;
+
 class Window
 {
 public:
-	bool Initialize(LPCWSTR title = L"Sable Engine", int width = 1280, int height = 720, bool fullscreen = false);
+	bool Initialize(EngineContainer* container, LPCWSTR title = L"Sable Engine", int width = 1280, int height = 720, bool fullscreen = false);
 	bool Run();
 	bool Shutdown();
-	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 private:
 	void CreateWindowClass();
 private:
@@ -21,8 +22,6 @@ private:
 	int m_width = 0;
 	int m_height = 0;
 	bool m_fullscreen = false;
-
-	static LRESULT CALLBACK WndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 };
 
 

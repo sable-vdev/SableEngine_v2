@@ -1,6 +1,6 @@
-#include "Window.hpp"
+#include "EngineContainer.hpp"
 
-bool Window::Initialize(LPCWSTR title, int width, int height, bool fullscreen)
+bool Window::Initialize(EngineContainer* container, LPCWSTR title, int width, int height, bool fullscreen)
 {
     m_width = width;
     m_height = height;
@@ -46,7 +46,7 @@ bool Window::Initialize(LPCWSTR title, int width, int height, bool fullscreen)
 	//create the window with the screen settings and set handle to it
 	m_hwnd = CreateWindowEx(0, m_windowClass, m_windowTitle, WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
 		WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX | WS_OVERLAPPEDWINDOW,
-		posX, posY, m_width, m_height, nullptr, nullptr, m_hInstance, this);
+		posX, posY, m_width, m_height, nullptr, nullptr, m_hInstance, container);
 
 	if (!m_hwnd)
 	{
@@ -111,6 +111,43 @@ bool Window::Shutdown()
 	return true;
 }
 
+LRESULT CALLBACK MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	switch (msg)
+	{
+	case WM_CLOSE:
+		DestroyWindow(hwnd);
+		return 0;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	default:
+		EngineContainer* const container = reinterpret_cast<EngineContainer*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+		return container->WindowProc(hwnd, msg, wparam, lparam);
+	}
+}
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	if (msg == WM_NCCREATE)
+	{
+		CREATESTRUCT* create = reinterpret_cast<CREATESTRUCT*>(lparam);
+		EngineContainer* window = reinterpret_cast<EngineContainer*> (create->lpCreateParams);
+		if (!window)
+		{
+			Logger::Log(ERROR, "Pointer to EngineContainer is null");
+			exit(-1);
+		}
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
+		SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(MessageHandler));
+		Logger::Log(INFO, "The window was created successfully.");
+
+		return window->WindowProc(hwnd, msg, wparam, lparam);
+	}
+
+	return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
 void Window::CreateWindowClass()
 {
 	WNDCLASSEX wc;
@@ -134,54 +171,4 @@ void Window::CreateWindowClass()
 
 	//Register the window class
 	RegisterClassEx(&wc);
-}
-
-LRESULT Window::MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
-{
-	unsigned char c;
-
-	switch (msg)
-	{
-	case WM_NCCREATE:
-		Logger::Log(INFO, "The window was created successfully.");
-		return 0;
-	case WM_CHAR:
-		c = static_cast<unsigned char>(wparam);
-		return 0;
-	case WM_KEYDOWN:
-		c = static_cast<unsigned char>(wparam);
-		return 0;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-	case WM_CLOSE:
-		DestroyWindow(hwnd);
-		return 0;
-	default:
-		return DefWindowProc(hwnd, msg, wparam, lparam);
-	}
-}
-
-LRESULT Window::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
-{
-	Window* window = nullptr;
-
-	if (msg == WM_NCCREATE)
-	{
-		CREATESTRUCT* create = reinterpret_cast<CREATESTRUCT*>(lparam);
-		window = reinterpret_cast<Window*> (create->lpCreateParams);
-		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
-		window->m_hwnd = hwnd;
-	}
-	else
-	{
-		window = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-	}
-
-	if (window)
-	{
-		return window->MessageHandler(hwnd, msg, wparam, lparam);
-	}
-
-	return DefWindowProc(hwnd, msg, wparam, lparam);
 }

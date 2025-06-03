@@ -22,14 +22,9 @@ bool SableEngine::Run()
 
 void SableEngine::Update()
 {
-	if (!m_keyboard.IsCharBufferEmpty())
+	if (!m_input.IsKeyBufferEmpty())
 	{
-		unsigned char c = m_keyboard.ReadChar();
-		if (c == 'a')
-		{
-			Logger::Log(DEBUG, c);
-		}
-		
+		Logger::Log(DEBUG, m_input.GetCharacter());
 	}
 }
 

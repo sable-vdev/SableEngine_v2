@@ -24,13 +24,16 @@
     <ClInclude Include="src\Window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\KeyboardInputEvent.hpp">
+    <ClInclude Include="src\legacy%28fornow%29\KeyboardInputEvent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\KeyboardClass.hpp">
+    <ClInclude Include="src\legacy%28fornow%29\KeyboardClass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\EngineContainer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,13 +47,16 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KeyboardInputEvent.cpp">
+    <ClCompile Include="src\legacy%28fornow%29\KeyboardInputEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KeyboardClass.cpp">
+    <ClCompile Include="src\legacy%28fornow%29\KeyboardClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

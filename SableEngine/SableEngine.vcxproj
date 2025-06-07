@@ -19,19 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Input.hpp" />
+    <ClInclude Include="src\Graphics.hpp" />
+    <ClInclude Include="src\MouseClass.hpp" />
+    <ClInclude Include="src\MouseInputEvent.hpp" />
     <ClInclude Include="src\EngineContainer.hpp" />
-    <ClInclude Include="src\legacy%28fornow%29\KeyboardClass.hpp" />
-    <ClInclude Include="src\legacy%28fornow%29\KeyboardInputEvent.hpp" />
+    <ClInclude Include="src\KeyboardClass.hpp" />
+    <ClInclude Include="src\KeyboardInputEvent.hpp" />
     <ClInclude Include="src\SableEngine.hpp" />
     <ClInclude Include="src\Logger.hpp" />
     <ClInclude Include="src\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\Graphics.cpp" />
+    <ClCompile Include="src\MouseClass.cpp" />
+    <ClCompile Include="src\MouseInputEvent.cpp" />
     <ClCompile Include="src\EngineContainer.cpp" />
-    <ClCompile Include="src\legacy%28fornow%29\KeyboardClass.cpp" />
-    <ClCompile Include="src\legacy%28fornow%29\KeyboardInputEvent.cpp" />
+    <ClCompile Include="src\KeyboardClass.cpp" />
+    <ClCompile Include="src\KeyboardInputEvent.cpp" />
     <ClCompile Include="src\SableEngine.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Window.cpp" />

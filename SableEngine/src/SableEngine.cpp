@@ -12,6 +12,17 @@ bool SableEngine::Initialize(LPCWSTR title, int width, int height, bool fullscre
 		return false;
 	}
 
+	m_rawInputDevice.usUsagePage = 0x01;
+	m_rawInputDevice.usUsage = 0x02;
+
+	if (!RegisterRawInputDevices(&m_rawInputDevice, 1, sizeof(m_rawInputDevice)))
+	{
+		Logger::Log(ERROR, "Failed to initialize the raw input devices.");
+		return false;
+	}
+
+	m_graphics = Graphics(m_window.hwnd, width, height, fullscreen);
+
 	return true;
 }
 
@@ -22,9 +33,9 @@ bool SableEngine::Run()
 
 void SableEngine::Update()
 {
-	if (!m_input.IsKeyBufferEmpty())
+	if (!m_keyboard.IsCharBufferEmpty())
 	{
-		Logger::Log(DEBUG, m_input.GetCharacter());
+		Logger::Log(DEBUG, m_keyboard.ReadChar());
 	}
 }
 

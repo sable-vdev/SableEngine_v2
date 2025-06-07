@@ -47,20 +47,20 @@ unsigned char KeyboardClass::ReadChar()
 	return e;
 }
 
-void KeyboardClass::OnKeyPressed(const unsigned char key)
+void KeyboardClass::OnKeyDown(const unsigned char key)
 {
 	m_keyStates[key] = true;
 	m_keyBuffer.push(KeyboardInputEvent(KeyboardInputEvent::EventType::Pressed, key));
 
 }
 
-void KeyboardClass::OnKeyReleased(const unsigned char key)
+void KeyboardClass::OnKeyUp(const unsigned char key)
 {
 	m_keyStates[key] = false;
 	m_keyBuffer.push(KeyboardInputEvent(KeyboardInputEvent::EventType::Released, key));
 }
 
-void KeyboardClass::OnChar(const unsigned key)
+void KeyboardClass::OnChar(const unsigned char key)
 {
 	m_charBuffer.push(key);
 }

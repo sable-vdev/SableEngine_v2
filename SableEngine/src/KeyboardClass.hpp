@@ -9,14 +9,12 @@ public:
 	bool IsPressed(unsigned char key);
 	bool IsKeyBufferEmpty();
 	bool IsCharBufferEmpty();
-	KeyboardInputEvent ReadKey();
+	void OnKeyDown(const unsigned char key);
+	void OnKeyUp(const unsigned char key);
+	void OnChar(const unsigned char key);
+
 	unsigned char ReadChar();
-	void OnKeyPressed(const unsigned char key);
-	void OnKeyReleased(const unsigned char key);
-	void OnChar(const unsigned key);
-public:
-	bool autoRepeatKeys = false;
-	bool autoRepeatChars = false;
+	KeyboardInputEvent ReadKey();
 private:
 	bool m_keyStates[256];
 	std::queue<KeyboardInputEvent> m_keyBuffer;

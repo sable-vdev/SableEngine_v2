@@ -2,26 +2,30 @@
 
 void Logger::Log(LogLevel logLevel, const std::string& message, const std::source_location& location)
 {
-	if (logLevel >= showMessage)
-	{
-		std::chrono::system_clock::time_point timenow = std::chrono::system_clock::now();
-		std::cout << "[" << std::format("{:%d-%m-%Y %H:%M:%S}", timenow) << "]"
-			<< location.function_name()
-			<< "[" << LogLevelToString(logLevel) << "] " << message << std::endl;
-	}
+	std::chrono::system_clock::time_point timenow = std::chrono::system_clock::now();
+	std::cout << "[" << std::format("{:%d-%m-%Y %H:%M:%S}", timenow) << "]"
+	<< location.function_name()
+	<< "[" << LogLevelToString(logLevel) << "] " << message << std::endl;
+
 }
 
-void Logger::Log(LogLevel logLevel, const unsigned char character, const std::source_location& location)
+void Logger::Log(LogLevel logLevel, const unsigned char& character, const std::source_location& location)
 {
 	std::string output = "";
 	output += character;
-	if (logLevel >= showMessage)
-	{
-		std::chrono::system_clock::time_point timenow = std::chrono::system_clock::now();
-		std::cout << "[" << std::format("{:%d-%m-%Y %H:%M:%S}", timenow) << "]"
-			<< location.function_name()
-			<< "[" << LogLevelToString(logLevel) << "] " << output << std::endl;
-	}
+	std::chrono::system_clock::time_point timenow = std::chrono::system_clock::now();
+	std::cout << "[" << std::format("{:%d-%m-%Y %H:%M:%S}", timenow) << "]"
+		<< location.function_name()
+		<< "[" << LogLevelToString(logLevel) << "] " << output << std::endl;
+}
+
+void Logger::Log(LogLevel logLevel, const wchar_t* character, const std::source_location& location)
+{
+	std::chrono::system_clock::time_point timenow = std::chrono::system_clock::now();
+	std::cout << "[" << std::format("{:%d-%m-%Y %H:%M:%S}", timenow) << "]"
+		<< location.function_name() << location.line() << location.column()
+		<< "[" << LogLevelToString(logLevel) << "] ";
+	std::wprintf(L"%s\n", character);
 }
 
 std::string Logger::LogLevelToString(LogLevel logLevel)

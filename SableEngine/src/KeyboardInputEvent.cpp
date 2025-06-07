@@ -1,4 +1,5 @@
 #include "KeyboardInputEvent.hpp"
+#include "MouseInputEvent.hpp"
 
 KeyboardInputEvent::KeyboardInputEvent() : m_type(EventType::Invalid), m_key(0)
 {

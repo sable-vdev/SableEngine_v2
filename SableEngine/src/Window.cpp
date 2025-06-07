@@ -44,21 +44,21 @@ bool Window::Initialize(EngineContainer* container, LPCWSTR title, int width, in
 	}
 
 	//create the window with the screen settings and set handle to it
-	m_hwnd = CreateWindowEx(0, m_windowClass, m_windowTitle, WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
+	hwnd = CreateWindowEx(0, m_windowClass, m_windowTitle, WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
 		WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX | WS_OVERLAPPEDWINDOW,
 		posX, posY, m_width, m_height, nullptr, nullptr, m_hInstance, container);
 
-	if (!m_hwnd)
+	if (!hwnd)
 	{
 		Logger::Log(LogLevel::ERROR, "Failed to create the window.");
 		return false;
 	}
 
 	//Bring up the window on the screen and set it to focus
-	SetWindowText(m_hwnd, m_windowTitle);
-	ShowWindow(m_hwnd, SW_SHOW);
-	SetForegroundWindow(m_hwnd);
-	SetFocus(m_hwnd);
+	SetWindowText(hwnd, m_windowTitle);
+	ShowWindow(hwnd, SW_SHOW);
+	SetForegroundWindow(hwnd);
+	SetFocus(hwnd);
 
 	//Hide the mouse cursor
 	//ShowCursor(false);
@@ -100,9 +100,9 @@ bool Window::Shutdown()
 	}
 
 	//remove the window
-	if(m_hwnd)
-		DestroyWindow(m_hwnd);
-	m_hwnd = nullptr;
+	if(hwnd)
+		DestroyWindow(hwnd);
+	hwnd = nullptr;
 
 	//remove application class
 	UnregisterClass(m_windowClass, m_hInstance);

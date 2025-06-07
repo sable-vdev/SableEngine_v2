@@ -14,8 +14,9 @@ public:
 	bool Shutdown();
 private:
 	void CreateWindowClass();
+public:
+	HWND hwnd = nullptr;
 private:
-	HWND m_hwnd = nullptr;
 	HINSTANCE m_hInstance = nullptr;
 	LPCWSTR m_windowTitle = nullptr;
 	LPCWSTR m_windowClass = nullptr;

@@ -41,6 +41,7 @@
 *.pdb
 *.ilk
 
-Runtime/
+PlaygroundB/
 Engine/
+
 .vs/

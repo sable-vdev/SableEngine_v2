@@ -5,13 +5,12 @@ bool Window::Initialize(EngineContainer* container, LPCWSTR title, int width, in
     m_width = width;
     m_height = height;
     m_fullscreen = fullscreen;
-    m_windowTitle = title;
+    windowTitle = title;
 	m_windowClass = L"windowClass";
 
 	WindowHandle = this;
 
     CreateWindowClass();
-
 
 	DEVMODE dmScreenSettings;
 	int posX, posY;
@@ -44,7 +43,7 @@ bool Window::Initialize(EngineContainer* container, LPCWSTR title, int width, in
 	}
 
 	//create the window with the screen settings and set handle to it
-	hwnd = CreateWindowEx(0, m_windowClass, m_windowTitle, WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
+	hwnd = CreateWindowEx(0, m_windowClass, windowTitle, WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
 		WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX | WS_OVERLAPPEDWINDOW,
 		posX, posY, m_width, m_height, nullptr, nullptr, m_hInstance, container);
 
@@ -55,7 +54,7 @@ bool Window::Initialize(EngineContainer* container, LPCWSTR title, int width, in
 	}
 
 	//Bring up the window on the screen and set it to focus
-	SetWindowText(hwnd, m_windowTitle);
+	SetWindowText(hwnd, windowTitle);
 	ShowWindow(hwnd, SW_SHOW);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
@@ -73,7 +72,7 @@ bool Window::Run()
 	//Init the message struct
 	ZeroMemory(&message, sizeof(MSG));
 	//Handle window messages
-	if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE))
+	while (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&message);
 		DispatchMessage(&message);

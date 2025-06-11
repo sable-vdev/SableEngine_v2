@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Shaders.hpp" />
+    <ClInclude Include="src\VertexStruct.hpp" />
     <ClInclude Include="src\Graphics.hpp" />
     <ClInclude Include="src\MouseClass.hpp" />
     <ClInclude Include="src\MouseInputEvent.hpp" />
@@ -30,6 +32,7 @@
     <ClInclude Include="src\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Shaders.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\MouseClass.cpp" />
     <ClCompile Include="src\MouseInputEvent.cpp" />
@@ -39,6 +42,16 @@
     <ClCompile Include="src\SableEngine.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\VertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -155,6 +168,9 @@
     <Lib>
       <AdditionalLibraryDirectories>C:\Dev\SableEngine_v2\dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -181,6 +197,9 @@
     <Lib>
       <AdditionalLibraryDirectories>C:\Dev\SableEngine_v2\dependencies\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

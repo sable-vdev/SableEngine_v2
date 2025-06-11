@@ -16,12 +16,13 @@ private:
 	void CreateWindowClass();
 public:
 	HWND hwnd = nullptr;
+	LPCWSTR windowTitle = nullptr;
 private:
 	HINSTANCE m_hInstance = nullptr;
-	LPCWSTR m_windowTitle = nullptr;
 	LPCWSTR m_windowClass = nullptr;
 	int m_width = 0;
 	int m_height = 0;
+	
 	bool m_fullscreen = false;
 };
 

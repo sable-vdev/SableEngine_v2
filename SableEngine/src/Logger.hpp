@@ -19,6 +19,7 @@ public:
 	static void Log(LogLevel logLevel, const std::string& message, const std::source_location& location = std::source_location::current());
 	static void Log(LogLevel logLevel, const unsigned char& character, const std::source_location& location = std::source_location::current());
 	static void Log(LogLevel logLevel, const wchar_t* character, const std::source_location& location = std::source_location::current());
+	static void Log(LogLevel logLevel, const std::wstring& character, const std::source_location& location = std::source_location::current());
 private:
 	static std::string LogLevelToString(LogLevel logLevel);
 	Logger() = delete;

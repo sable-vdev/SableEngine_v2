@@ -24,7 +24,7 @@ bool SableEngine::Initialize(LPCWSTR title, int width, int height, bool fullscre
 		return false;
 	}
 
-	m_graphics = Graphics(m_window.hwnd, width, height, &fullscreen, false);
+	m_graphics = Graphics(m_window.hwnd, width, height, fullscreen, false);
 
 	return true;
 }
@@ -51,7 +51,10 @@ bool SableEngine::Run()
 	}
 	m_lastTime = currentTime;
 	m_fps++;
-	return m_window.Run();
+	if (!m_window.Run()) return false;
+
+	Update();
+	Render();
 }
 
 void SableEngine::Render()

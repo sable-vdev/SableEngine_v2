@@ -20,3 +20,14 @@ private:
 	ComPtr<ID3D11InputLayout> m_inputLayout;
 };
 
+class PixelShader
+{
+public:
+	bool Initialize(ComPtr<ID3D11Device>& device, std::wstring shaderPath);
+	ID3D11PixelShader* GetShader() const;
+	ID3D10Blob* GetBuffer() const;
+private:
+	ComPtr<ID3D11PixelShader> m_pixelShader;
+	ComPtr<ID3D10Blob> m_pixelBuffer;
+};
+

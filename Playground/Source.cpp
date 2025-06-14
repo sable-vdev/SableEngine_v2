@@ -15,8 +15,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		{
 			while (engine->Run())
 			{
-				engine.get()->Update();
-				engine.get()->Render();
 			}
 		}
 		catch (const std::exception& ex)

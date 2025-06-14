@@ -1,7 +1,5 @@
 #include "Graphics.hpp"
 
-#include <string>
-
 Graphics::Graphics() : m_fullscreen(false), m_vsync(false)
 {
 }
@@ -17,6 +15,11 @@ Graphics::Graphics(HWND& hwnd, int& width, int& height, bool fullscreen, bool vs
     {
         Logger::Log(ERROR, "Failed to initialize Shaders");
     }
+
+    if (!InitializeScene())
+    {
+        Logger::Log(ERROR, "Failed to initialize Scene");
+    }
 }
 
 Graphics::~Graphics()
@@ -25,13 +28,26 @@ Graphics::~Graphics()
 
 void Graphics::Render()
 {
-    float color[4] = { 0.1f, 0.25f, 0.5f, 1.0f };
-    m_deviceContext.Get()->ClearRenderTargetView(m_renderTargetView.Get(), color);
+    float color[4] = { 0.4f, 0.6f, 0.9f, 1.0f };
+    m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
+
+    m_deviceContext->IASetInputLayout(m_vertexShader.GetLayout());
+    m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    m_deviceContext->VSSetShader(m_vertexShader.GetShader(), nullptr, 0);
+    m_deviceContext->PSSetShader(m_pixelShader.GetShader(), nullptr, 0);
+
+    UINT stride = sizeof(Vertex);
+    UINT offset = 0;
+    m_deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+
+    m_deviceContext->Draw(3, 0);
+
     if (m_vsync)
     {
-        m_swapChain.Get()->Present(1, 0);
+        m_swapChain->Present(1, 0);
     }
-    else m_swapChain.Get()->Present(0, 0);
+    else m_swapChain->Present(0, 0);
 }
 
 bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
@@ -47,13 +63,16 @@ bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
     ComPtr<IDXGIAdapter1> adapter;
     std::multimap<size_t, ComPtr<IDXGIAdapter1>> adapterMap;
     
+    //go through every adapter the computer has and rank them based on their vram size
     for (UINT i = 0; factory->EnumAdapters1(i, &adapter) != DXGI_ERROR_NOT_FOUND; ++i)
     {
         DXGI_ADAPTER_DESC1 desc;
         adapter->GetDesc1(&desc);
         adapterMap.insert(std::make_pair(desc.DedicatedVideoMemory, adapter));
+        /*
         std::wstring output = desc.Description;
         Logger::Log(DEBUG, output + L" " + std::to_wstring(desc.DedicatedVideoMemory));
+        */
     }
 
     if (adapterMap.empty() && adapterMap.rbegin()->first <= 0)
@@ -64,13 +83,18 @@ bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
 
     adapter = adapterMap.rbegin()->second;
 
-    m_adapterDescription = DXGI_ADAPTER_DESC1();
-    adapter->GetDesc1(&m_adapterDescription);
+    DXGI_ADAPTER_DESC1 desc;
+    adapter->GetDesc1(&desc);
 
-    Logger::Log(DEBUG, m_adapterDescription.Description);
+    m_adapterDescription = desc.Description;
+    m_adapterDescription += L" (";
+    m_adapterDescription += std::to_wstring(desc.DedicatedVideoMemory / 1024 / 1024);
+    m_adapterDescription += L" GB)";
+
+    Logger::Log(DEBUG, m_adapterDescription);
 
     ComPtr<IDXGIOutput> output;
-
+    //TODO
     if (FAILED(adapter->EnumOutputs(0, &output)))
     {
         Logger::Log(ERROR, "Failed to enumerate monitors");
@@ -92,6 +116,7 @@ bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
     {
         return false;
     }
+    //TILL TODO
 
     DXGI_SWAP_CHAIN_DESC swapChainDescription;
     ZeroMemory(&swapChainDescription, sizeof(DXGI_SWAP_CHAIN_DESC));
@@ -125,7 +150,7 @@ bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
     swapChainDescription.SampleDesc.Quality = 0;
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDescription.OutputWindow = hwnd;
-    swapChainDescription.Windowed = m_fullscreen;
+    swapChainDescription.Windowed = !m_fullscreen;
     swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     swapChainDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
@@ -153,12 +178,24 @@ bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
 
     m_deviceContext.Get()->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), nullptr);
 
+
+    D3D11_VIEWPORT viewport;
+    ZeroMemory(&viewport, sizeof(viewport));
+
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = static_cast<FLOAT>(width);
+    viewport.Height = static_cast<FLOAT>(height);
+
+    m_deviceContext->RSSetViewports(1, &viewport);
+
     return true;
 }
 
 bool Graphics::InitializeShaders()
 {
     std::wstring shaderpath;
+
 #ifdef NDEBUG
     shaderpath = L"..\\Engine\\bin\\Release\\";
 #else 
@@ -168,13 +205,48 @@ bool Graphics::InitializeShaders()
     
     D3D11_INPUT_ELEMENT_DESC layout[] =
     {
-        {"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
 
     UINT numElements = ARRAYSIZE(layout);
 
     if (!m_vertexShader.Initialize(m_device, shaderpath + L"VertexShader.cso", layout, numElements))
     {
+        return false;
+    }
+
+    if (!m_pixelShader.Initialize(m_device, shaderpath + L"PixelShader.cso"))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Graphics::InitializeScene()
+{
+    Vertex vertices[] = {
+        Vertex(0.0f, 0.5f),
+        Vertex(0.5f, -0.5f),
+        Vertex(-0.5f, -0.5f),
+    };
+
+    D3D11_BUFFER_DESC vbDesc;
+    ZeroMemory(&vbDesc, sizeof(vbDesc));
+
+    vbDesc.ByteWidth = sizeof(vertices);
+    vbDesc.Usage = D3D11_USAGE_DEFAULT;
+    vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vbDesc.CPUAccessFlags = 0;
+    vbDesc.MiscFlags = 0;
+
+    D3D11_SUBRESOURCE_DATA vbSRD;
+    ZeroMemory(&vbSRD, sizeof(vbSRD));
+    vbSRD.pSysMem = vertices;
+
+    if (FAILED(m_device->CreateBuffer(&vbDesc, &vbSRD, m_vertexBuffer.GetAddressOf())))
+    {
+        Logger::Log(ERROR, "Failed to create vertex buffer");
         return false;
     }
 

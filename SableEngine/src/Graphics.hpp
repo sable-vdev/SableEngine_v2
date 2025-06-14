@@ -7,6 +7,7 @@
 #include <map>
 #include "Logger.hpp"
 #include "Shaders.hpp"
+#include "Vertex.hpp"
 
 using Microsoft::WRL::ComPtr;
 
@@ -20,13 +21,16 @@ public:
 private:
 	bool InitializeDirectX(HWND& hwnd, int& width, int& height);
 	bool InitializeShaders();
+	bool InitializeScene();
 private:
 	ComPtr<ID3D11Device> m_device;
 	ComPtr<IDXGISwapChain> m_swapChain;
 	ComPtr<ID3D11DeviceContext> m_deviceContext;
 	ComPtr<ID3D11RenderTargetView> m_renderTargetView;
+	std::wstring m_adapterDescription;
 	VertexShader m_vertexShader;
-	DXGI_ADAPTER_DESC1 m_adapterDescription;
+	PixelShader m_pixelShader;
+	ComPtr<ID3D11Buffer> m_vertexBuffer;
 	bool m_fullscreen;
 	bool m_vsync;
 };

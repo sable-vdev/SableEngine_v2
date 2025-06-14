@@ -102,7 +102,6 @@ bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
     }
 
     UINT numModes = 0;
-    DXGI_MODE_DESC* displayModes = nullptr;
     DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
     if (FAILED(output->GetDisplayModeList(format, 0, &numModes, nullptr)))
@@ -110,9 +109,9 @@ bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
         return false;
     }
 
-    displayModes = new DXGI_MODE_DESC[numModes];
+    std::unique_ptr<DXGI_MODE_DESC[]> displayModes(new DXGI_MODE_DESC[numModes]);
 
-    if (FAILED(output->GetDisplayModeList(format, 0, &numModes, displayModes)))
+    if (FAILED(output->GetDisplayModeList(format, 0, &numModes, displayModes.get())))
     {
         return false;
     }
@@ -124,7 +123,7 @@ bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
     UINT numerator = 0, denominator = 0;
     for (UINT i = 0; i < numModes; i++)
     {
-        if (displayModes[i].Width == (UINT) width && displayModes[i].Height == (UINT) height)
+        if (displayModes[i].Width == static_cast<UINT>(width) && displayModes[i].Height == static_cast<UINT>(height))
         {
             numerator = displayModes[i].RefreshRate.Numerator;
             denominator = displayModes[i].RefreshRate.Denominator;

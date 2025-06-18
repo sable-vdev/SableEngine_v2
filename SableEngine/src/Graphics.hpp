@@ -29,10 +29,14 @@ private:
 	ComPtr<ID3D11DeviceContext> m_deviceContext;
 	ComPtr<ID3D11RenderTargetView> m_renderTargetView;
 	ComPtr<ID3D11Buffer> m_vertexBuffer;
+	ComPtr<ID3D11Buffer> m_vertexBuffer2;
 	ComPtr<ID3D11RasterizerState> m_rasterizerState;
+	ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+	ComPtr<ID3D11DepthStencilState> m_depthStencilState;
 	std::wstring m_adapterDescription;
 	VertexShader m_vertexShader;
 	PixelShader m_pixelShader;
+	std::vector<Vertex> m_vertices;
 	bool m_fullscreen;
 	bool m_vsync;
 };

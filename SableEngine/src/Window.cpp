@@ -76,12 +76,12 @@ bool Window::Run()
 	{
 		TranslateMessage(&message);
 		DispatchMessage(&message);
-	}
 
-	//If window signals to end the application then exit
-	if (message.message == WM_QUIT)
-	{
+		//If window signals to end the application then exit
+		if (message.message == WM_QUIT)
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -100,7 +100,7 @@ bool Window::Shutdown()
 
 	//remove the window
 	if(hwnd)
-		DestroyWindow(hwnd);
+		std::cout << DestroyWindow(hwnd);
 	hwnd = nullptr;
 
 	//remove application class
@@ -115,7 +115,7 @@ LRESULT CALLBACK MessageHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
 	switch (msg)
 	{
 	case WM_CLOSE:
-		DestroyWindow(hwnd);
+		PostQuitMessage(0);
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);

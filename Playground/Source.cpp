@@ -16,13 +16,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			while (engine->Run())
 			{
 			}
+
+
 		}
 		catch (const std::exception& ex)
 		{
-			Logger::Log(ERROR, ex.what());
+			//Logger::Log(ERROR, ex.what());
 			return EXIT_FAILURE;
 		}
 	}
-
+	engine->Shutdown();
 	return EXIT_SUCCESS;
 }

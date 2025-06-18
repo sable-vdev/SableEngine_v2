@@ -18,6 +18,7 @@ public:
 	Graphics(HWND& hwnd, int& width, int& height, bool fullscreen, bool vsync);
 	~Graphics();
 	void Render();
+	void Shutdown();
 private:
 	bool InitializeDirectX(HWND& hwnd, int& width, int& height);
 	bool InitializeShaders();

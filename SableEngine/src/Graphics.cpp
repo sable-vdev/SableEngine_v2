@@ -26,6 +26,17 @@ Graphics::~Graphics()
 {
 }
 
+void Graphics::Shutdown()
+{
+    if (m_deviceContext) m_deviceContext->ClearState(); // Optional but safe
+    m_vertexBuffer.Reset();
+    m_renderTargetView.Reset();
+    m_swapChain.Reset();
+    m_deviceContext.Reset();
+    m_device.Reset();
+    m_rasterizerState.Reset();
+}
+
 void Graphics::Render()
 {
     float color[4] = { 0.4f, 0.6f, 0.9f, 1.0f };
@@ -33,7 +44,7 @@ void Graphics::Render()
 
     m_deviceContext->IASetInputLayout(m_vertexShader.GetLayout());
     m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    //m_deviceContext->RSSetState(m_rasterizerState.Get());
+    m_deviceContext->RSSetState(m_rasterizerState.Get());
     m_deviceContext->VSSetShader(m_vertexShader.GetShader(), nullptr, 0);
     m_deviceContext->PSSetShader(m_pixelShader.GetShader(), nullptr, 0);
 
@@ -212,7 +223,6 @@ bool Graphics::InitializeShaders()
     shaderpath = L"..\\Engine\\bin\\Debug\\";
 #endif // NDEBUG
 
-    
     D3D11_INPUT_ELEMENT_DESC layout[] =
     {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -238,9 +248,9 @@ bool Graphics::InitializeScene()
 {
     std::vector<Vertex> verticesv;
     verticesv.reserve(3);
-    verticesv.emplace_back(Vertex(DirectX::XMFLOAT3(0.0f, 0.5f, 0.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)));
-    verticesv.emplace_back(Vertex(DirectX::XMFLOAT3(0.5f, -0.5f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f)));
-    verticesv.emplace_back(Vertex(DirectX::XMFLOAT3(-0.5f, -0.5f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
+    verticesv.emplace_back(Vertex(DirectX::XMFLOAT3(0.0f, 0.5f, 0.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.25f)));
+    verticesv.emplace_back(Vertex(DirectX::XMFLOAT3(0.5f, -0.5f, 0.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)));
+    verticesv.emplace_back(Vertex(DirectX::XMFLOAT3(-0.5f, -0.5f, 0.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.75f)));
 
     D3D11_BUFFER_DESC vbDesc;
     ZeroMemory(&vbDesc, sizeof(vbDesc));

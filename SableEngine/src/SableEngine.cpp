@@ -14,7 +14,6 @@ bool SableEngine::Initialize(LPCWSTR title, int width, int height, bool fullscre
 		Logger::Log(ERROR, "Failed to initialize the window class.");
 		return false;
 	}
-
 	m_rawInputDevice.usUsagePage = 0x01;
 	m_rawInputDevice.usUsage = 0x02;
 
@@ -76,16 +75,21 @@ void SableEngine::Update()
 void SableEngine::Shutdown()
 {
 	m_window.Shutdown();
+	m_graphics.Shutdown();
+#ifndef NDEBUG
+	FreeConsole();
+	if (m_consoleStderr) fclose(m_consoleStderr);
+	if (m_consoleStdout) fclose(m_consoleStdout);
+	if (m_consoleStdin) fclose(m_consoleStdin);
+#endif
 }
 
 void SableEngine::CreateConsole()
 {
 	AllocConsole();
-
-	FILE* file;
-	freopen_s(&file, "CONOUT$", "w", stdout);
-	freopen_s(&file, "CONOUT$", "w", stderr);
-	freopen_s(&file, "CONIN$", "r", stdin);
+	freopen_s(&m_consoleStdout, "CONOUT$", "w", stdout);
+	freopen_s(&m_consoleStderr, "CONOUT$", "w", stderr);
+	freopen_s(&m_consoleStdin, "CONIN$", "r", stdin);
 
 	std::ios::sync_with_stdio();
 

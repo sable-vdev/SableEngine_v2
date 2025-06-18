@@ -41,11 +41,12 @@ bool SableEngine::Run()
 	{
 		m_timer = 0.0f;
 
-		std::wstringstream wss{};
-		wss << m_window.windowTitle << " [" << m_fps << " (" << 1000.0 / m_fps << "ms)]";
-
-		std::wstring fpsString = wss.str();
-
+		std::wstring fpsString = m_window.windowTitle;
+		fpsString += L" [";
+		fpsString += std::to_wstring(m_fps);
+		fpsString += L" (";
+		fpsString += std::to_wstring(1000.0 / m_fps);
+		fpsString += L" ms)]";
 		SetWindowText(m_window.hwnd, fpsString.c_str());
 		m_fps = 0;
 	}
@@ -55,6 +56,8 @@ bool SableEngine::Run()
 
 	Update();
 	Render();
+
+	return true;
 }
 
 void SableEngine::Render()

@@ -6,10 +6,10 @@ class SableEngine : EngineContainer
 public:
 	bool Initialize(LPCWSTR title = L"Sable Engine", int width = 1280, int height = 720, bool fullscreen = false);
 	bool Run();
+private:
 	void Render();
 	void Update();
 	void Shutdown();
-private:
 	void CreateConsole();
 public:
 	float deltaTime;

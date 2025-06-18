@@ -7,6 +7,7 @@ void Logger::Log(LogLevel logLevel, const std::string& message, const std::sourc
 	<< location.function_name() << "(" << location.line() << ";" << location.column() << ")"
 	<< "[" << LogLevelToString(logLevel) << "] " << message << std::endl;
 
+	//if (logLevel == LogLevel::ERROR) exit(-1);
 }
 
 void Logger::Log(LogLevel logLevel, const unsigned char& character, const std::source_location& location)
@@ -17,6 +18,8 @@ void Logger::Log(LogLevel logLevel, const unsigned char& character, const std::s
 	std::cout << "[" << std::format("{:%d-%m-%Y %H:%M:%S}", timenow) << "]"
 		<< location.function_name() << "(" << location.line() << ";" << location.column() << ")"
 		<< "[" << LogLevelToString(logLevel) << "] " << output << std::endl;
+
+	//if (logLevel == LogLevel::ERROR) exit(-1);
 }
 
 void Logger::Log(LogLevel logLevel, const wchar_t* character, const std::source_location& location)
@@ -26,6 +29,8 @@ void Logger::Log(LogLevel logLevel, const wchar_t* character, const std::source_
 		<< location.function_name() << "(" << location.line() << ";" << location.column() << ")"
 		<< "[" << LogLevelToString(logLevel) << "] ";
 	std::wprintf(L"%s\n", character);
+
+	//if (logLevel == LogLevel::ERROR) exit(-1);
 }
 
 void Logger::Log(LogLevel logLevel, const std::wstring& message, const std::source_location& location)
@@ -35,6 +40,8 @@ void Logger::Log(LogLevel logLevel, const std::wstring& message, const std::sour
 		<< location.function_name() << "(" << location.line() << ";" << location.column() << ")"
 		<< "[" << LogLevelToString(logLevel) << "] ";
 	std::wprintf(L"%s\n", message.c_str());
+
+	//if (logLevel == LogLevel::ERROR) exit(-1);
 }
 
 std::string Logger::LogLevelToString(LogLevel logLevel)

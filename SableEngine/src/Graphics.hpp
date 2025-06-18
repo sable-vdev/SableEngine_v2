@@ -27,10 +27,11 @@ private:
 	ComPtr<IDXGISwapChain> m_swapChain;
 	ComPtr<ID3D11DeviceContext> m_deviceContext;
 	ComPtr<ID3D11RenderTargetView> m_renderTargetView;
+	ComPtr<ID3D11Buffer> m_vertexBuffer;
+	ComPtr<ID3D11RasterizerState> m_rasterizerState;
 	std::wstring m_adapterDescription;
 	VertexShader m_vertexShader;
 	PixelShader m_pixelShader;
-	ComPtr<ID3D11Buffer> m_vertexBuffer;
 	bool m_fullscreen;
 	bool m_vsync;
 };

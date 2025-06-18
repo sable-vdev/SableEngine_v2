@@ -26,6 +26,6 @@ private:
 	bool m_leftIsDown = false;
 	bool m_rightIsDown = false;
 	bool m_middleIsDown = false;
-	int m_x, m_y;
+	int m_x = 0, m_y = 0;
 };
 

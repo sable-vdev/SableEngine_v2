@@ -33,7 +33,7 @@ void Graphics::Render()
 
     m_deviceContext->IASetInputLayout(m_vertexShader.GetLayout());
     m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
+    //m_deviceContext->RSSetState(m_rasterizerState.Get());
     m_deviceContext->VSSetShader(m_vertexShader.GetShader(), nullptr, 0);
     m_deviceContext->PSSetShader(m_pixelShader.GetShader(), nullptr, 0);
 
@@ -188,6 +188,17 @@ bool Graphics::InitializeDirectX(HWND& hwnd, int& width, int& height)
 
     m_deviceContext->RSSetViewports(1, &viewport);
 
+    D3D11_RASTERIZER_DESC rasterizerDesc;
+    ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
+
+    rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+    rasterizerDesc.CullMode = D3D11_CULL_BACK;
+    if (FAILED(m_device->CreateRasterizerState(&rasterizerDesc, m_rasterizerState.GetAddressOf())))
+    {
+        Logger::Log(ERROR, "Failed to create rasterizer state");
+        return false;
+    }
+
     return true;
 }
 
@@ -204,7 +215,8 @@ bool Graphics::InitializeShaders()
     
     D3D11_INPUT_ELEMENT_DESC layout[] =
     {
-        {"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
 
     UINT numElements = ARRAYSIZE(layout);
@@ -224,16 +236,16 @@ bool Graphics::InitializeShaders()
 
 bool Graphics::InitializeScene()
 {
-    Vertex vertices[] = {
-        Vertex(0.0f, 0.5f),
-        Vertex(0.5f, -0.5f),
-        Vertex(-0.5f, -0.5f),
-    };
+    std::vector<Vertex> verticesv;
+    verticesv.reserve(3);
+    verticesv.emplace_back(Vertex(DirectX::XMFLOAT3(0.0f, 0.5f, 0.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)));
+    verticesv.emplace_back(Vertex(DirectX::XMFLOAT3(0.5f, -0.5f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f)));
+    verticesv.emplace_back(Vertex(DirectX::XMFLOAT3(-0.5f, -0.5f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
 
     D3D11_BUFFER_DESC vbDesc;
     ZeroMemory(&vbDesc, sizeof(vbDesc));
 
-    vbDesc.ByteWidth = sizeof(vertices);
+    vbDesc.ByteWidth = static_cast<UINT>(verticesv.size() * sizeof(Vertex));
     vbDesc.Usage = D3D11_USAGE_DEFAULT;
     vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vbDesc.CPUAccessFlags = 0;
@@ -241,7 +253,7 @@ bool Graphics::InitializeScene()
 
     D3D11_SUBRESOURCE_DATA vbSRD;
     ZeroMemory(&vbSRD, sizeof(vbSRD));
-    vbSRD.pSysMem = vertices;
+    vbSRD.pSysMem = verticesv.data();
 
     if (FAILED(m_device->CreateBuffer(&vbDesc, &vbSRD, m_vertexBuffer.GetAddressOf())))
     {
